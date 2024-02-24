@@ -1,0 +1,161 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - bin/**/**
+    - vendor/**/*
+    - tmp/**/*
+    - db/schema.rb
+  TargetRubyVersion: 3.3
+
+Metrics/BlockLength:
+  Exclude:
+    - 'config/environments/development.rb'
+    
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MessageChain:
+  Enabled: false
+  
+RSpec/MultipleExpectations:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+# Bundler/OrderedGems:
+#   Enabled: true
+
+# Layout/LineLength:
+#   Enabled: true
+
+# Lint/ConstantDefinitionInBlock:
+#   Enabled: true
+
+# Lint/MissingSuper:
+#   Enabled: false
+
+# Lint/SafeNavigationChain:
+#   Enabled: true
+
+# Lint/ShadowedException:
+#   Enabled: true
+
+# Lint/UselessAssignment:
+#   Enabled: true
+
+# Metrics/AbcSize:
+#   Enabled: false
+
+# Metrics/BlockLength:
+#   Enabled: false
+
+# Metrics/BlockNesting:
+#   Enabled: false
+
+# Metrics/ClassLength:
+#   Enabled: false
+
+# Metrics/CyclomaticComplexity:
+#   Enabled: false
+
+# Metrics/MethodLength:
+#   Enabled: false
+
+# Metrics/ModuleLength:
+#   Enabled: false
+
+# Metrics/ParameterLists:
+#   Enabled: false
+
+# Metrics/PerceivedComplexity:
+#   Enabled: false
+
+# Naming/AccessorMethodName:
+#   Enabled: false
+
+# Naming/HeredocDelimiterNaming:
+#   Enabled: false
+
+# Naming/MethodParameterName:
+#   Enabled: false
+
+# Naming/VariableNumber:
+#   Enabled: false
+
+# Rails/ApplicationJob:
+#   Enabled: false
+
+# Rails/BulkChangeTable:
+#   Enabled: false
+
+# Rails/CreateTableWithTimestamps:
+#   Enabled: false
+
+# Rails/FilePath:
+#   Enabled: false
+
+# Rails/InverseOf:
+#   Enabled: false
+
+# Rails/HasAndBelongsToMany:
+#   Enabled: false
+
+# Rails/HasManyOrHasOneDependent:
+#   Enabled: false
+
+# Rails/NotNullColumn:
+#   Enabled: false
+
+# Rails/OutputSafety:
+#   Exclude:
+#     - app/controllers/frontend_controller.rb
+
+# Rails/ReversibleMigration:
+#   Enabled: false
+
+# Rails/UniqueValidationWithoutIndex:
+#   Enabled: false
+
+# Rails/UnknownEnv:
+#   Environments:
+#     - production
+#     - development
+#     - test
+#     - performance
+#     - qa
+#     - staging
+
+# Rails/SkipsModelValidations:
+#   Enabled: false
+
+# Style/ClassAndModuleChildren:
+#   Enabled: false
+
+# Style/Documentation:
+#   Enabled: false
+
+# Style/FrozenStringLiteralComment:
+#   Enabled: true
+
+# Style/GlobalVars:
+#   Enabled: false
+
+# Style/GuardClause:
+#   Enabled: false
+
+# Style/NumericLiterals:
+#   Enabled: false
+
+# Style/OptionalBooleanParameter:
+#   Enabled: false
+
+# Style/RescueStandardError:
+#   Enabled: false

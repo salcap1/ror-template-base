@@ -1,0 +1,296 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Your App Name V1",
+    "version": "v1"
+  },
+  "paths": {
+    "/auth/check": {
+      "get": {
+        "summary": "Check if User is Signed In",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "User is Signed In"
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "key": {
+                    "value": {
+                      "message": "Unauthorized",
+                      "errors": [
+                        "A List of Errors"
+                      ],
+                      "context": {
+                        "some": "Error Information"
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "get": {
+        "summary": "Refresh User Token",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "Auth Cookies Refreshed"
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "key": {
+                    "value": {
+                      "message": "Unauthorized",
+                      "errors": [
+                        "A List of Errors"
+                      ],
+                      "context": {
+                        "some": "Error Information"
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "summary": "Sign In User",
+        "tags": [
+          "Authentication"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "201": {
+            "description": "User Signed In",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user_object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Could Not Sign In User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_object"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "summary": "Create a User",
+        "tags": [
+          "Authentication"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "201": {
+            "description": "User Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user_object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Could not Create User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_object"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/auth/signout": {
+      "delete": {
+        "summary": "Sign Out User",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "204": {
+            "description": "User Signed Out"
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "key": {
+                    "value": {
+                      "message": "Unauthorized",
+                      "errors": [
+                        "A List of Errors"
+                      ],
+                      "context": {
+                        "some": "Error Information"
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://{defaultHost}",
+      "variables": {
+        "defaultHost": {
+          "default": "localhost:3001"
+        },
+        "token": {
+          "defaultToken": {
+            "default": "Bearer xxx"
+          }
+        }
+      }
+    }
+  ],
+  "components": {
+    "schemas": {
+      "error_object": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array"
+          },
+          "context": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "message",
+          "errors"
+        ]
+      },
+      "user_object": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "uuid": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "uuid",
+              "email",
+              "username"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
