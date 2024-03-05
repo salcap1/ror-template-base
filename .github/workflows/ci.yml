@@ -61,7 +61,7 @@ jobs:
         run: |
           bin/rake rswag:specs:swaggerize
 
-      - name: Create Coverage Artifact
-        uses: joshmfrankel/simplecov-check-action@main
+      - name: SimpleCov Report
+        uses: aki77/simplecov-report-action@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
