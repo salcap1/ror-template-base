@@ -107,17 +107,17 @@ RSpec.describe AuthController do
         include_context 'with cookie jar'
         include_context 'with issued tokens'
 
-        let(:email) { Faker::Internet.unique.email }
+        # let(:email) { Faker::Internet.unique.email }
         let(:user) do
           {
-            email:,
+            email: Faker::Internet.unique.email,
             username: Faker::Internet.unique.username,
             password: 'P@ssw0rd!234'
           }
         end
 
         run_test! do
-          expect(User.find_by(email:)).to be_present
+          expect(User.find_by(email: user[:email])).to be_present
           expect(cookies.signed[:access_token]).to eq(new_access_token)
           expect(cookies.signed[:refresh_token]).to eq(new_refresh_token)
         end

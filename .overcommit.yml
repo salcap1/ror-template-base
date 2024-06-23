@@ -31,6 +31,11 @@ PreCommit:
       - "node_modules/**/*"
       - "vendor/**/*"
       - "tmp/**/*"
+  RakeTask:
+    enabled: true
+    description: "Generate Swagger documentation"
+    required_executable: "rake"
+    command: ["bundle", "exec", "rake", "rswag:specs:swaggerize"]
   RuboCop:
     enabled: true
     exclude:

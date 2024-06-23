@@ -5,12 +5,12 @@ class User < ApplicationRecord
 
   before_save :generate_uuid
 
-  has_many :refresh_tokens, dependent: :delete_all
-  has_many :whitelisted_tokens, dependent: :delete_all
-  has_many :blacklisted_tokens, dependent: :delete_all
+  has_one :profile, dependent: :destroy
+  has_many :refresh_tokens, dependent: :destroy
+  has_many :whitelisted_tokens, dependent: :destroy
+  has_many :blacklisted_tokens, dependent: :destroy
 
   validates :email, uniqueness: { case_insensitive: true }
-  validates :username, uniqueness: { case_insensitive: true }
 
   private
 

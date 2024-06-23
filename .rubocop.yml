@@ -12,150 +12,131 @@ AllCops:
     - db/schema.rb
   TargetRubyVersion: 3.3
 
-Metrics/BlockLength:
+# Layout rules
+Layout/LineLength:
+  Max: 120
+
+Layout/TrailingWhitespace:
+  Enabled: true
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: true
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: true
+
+# Style rules
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
   Exclude:
-    - 'config/environments/development.rb'
-    
-RSpec/AnyInstance:
-  Enabled: false
+    - 'db/schema.rb'
 
-RSpec/ExampleLength:
-  Enabled: false
-
-RSpec/MessageChain:
-  Enabled: false
-  
-RSpec/MultipleExpectations:
-  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: true
 
 Style/Documentation:
+  Enabled: false # eventually enable
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19
+
+Layout/IndentationWidth:
+  Width: 2
+
+Style/MethodDefParentheses:
+  EnforcedStyle: require_parentheses
+
+# Metrics rules
+Metrics/AbcSize:
   Enabled: false
-# Bundler/OrderedGems:
-#   Enabled: true
 
-# Layout/LineLength:
-#   Enabled: true
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'config/environments/development.rb'
+    - 'db/migrate/*.rb'
+  Max: 25
 
-# Lint/ConstantDefinitionInBlock:
-#   Enabled: true
+Metrics/MethodLength:
+  Exclude:
+    - 'db/migrate/*.rb'
+  Max: 10
 
-# Lint/MissingSuper:
-#   Enabled: false
+Metrics/ClassLength:
+  Max: 100
 
-# Lint/SafeNavigationChain:
-#   Enabled: true
+# Lint rules
+Lint/AmbiguousBlockAssociation:
+  Enabled: true
 
-# Lint/ShadowedException:
-#   Enabled: true
+Lint/UselessAssignment:
+  Enabled: true
 
-# Lint/UselessAssignment:
-#   Enabled: true
+# Naming rules
+Naming/VariableName:
+  Enabled: true
+  EnforcedStyle: snake_case
 
-# Metrics/AbcSize:
-#   Enabled: false
+Naming/PredicateName:
+  Enabled: true
 
-# Metrics/BlockLength:
-#   Enabled: false
+Naming/MemoizedInstanceVariableName:
+  Enabled: true
 
-# Metrics/BlockNesting:
-#   Enabled: false
+# Rails-specific rules
+Rails:
+  Enabled: true
 
-# Metrics/ClassLength:
-#   Enabled: false
+Rails/HasManyOrHasOneDependent:
+  Enabled: true
 
-# Metrics/CyclomaticComplexity:
-#   Enabled: false
+Rails/HttpStatus:
+  EnforcedStyle: symbolic
 
-# Metrics/MethodLength:
-#   Enabled: false
+Rails/SkipsModelValidations:
+  Enabled: true
 
-# Metrics/ModuleLength:
-#   Enabled: false
+Rails/TimeZone:
+  Enabled: true
 
-# Metrics/ParameterLists:
-#   Enabled: false
+Rails/UniqueValidationWithoutIndex:
+  Enabled: true
 
-# Metrics/PerceivedComplexity:
-#   Enabled: false
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - performance
+    - qa
+    - staging
 
-# Naming/AccessorMethodName:
-#   Enabled: false
+# RSpec rules
+RSpec:
+  Enabled: true
 
-# Naming/HeredocDelimiterNaming:
-#   Enabled: false
+RSpec/Focus:
+  Enabled: true
 
-# Naming/MethodParameterName:
-#   Enabled: false
+RSpec/ImplicitSubject:
+  Enabled: true
 
-# Naming/VariableNumber:
-#   Enabled: false
+RSpec/InstanceVariable:
+  Enabled: true
 
-# Rails/ApplicationJob:
-#   Enabled: false
+RSpec/LetSetup:
+  Enabled: true
 
-# Rails/BulkChangeTable:
-#   Enabled: false
+RSpec/NestedGroups:
+  Max: 3
 
-# Rails/CreateTableWithTimestamps:
-#   Enabled: false
+RSpec/MultipleExpectations:
+  Max: 3
 
-# Rails/FilePath:
-#   Enabled: false
+RSpec/ExampleLength:
+  Max: 10
 
-# Rails/InverseOf:
-#   Enabled: false
-
-# Rails/HasAndBelongsToMany:
-#   Enabled: false
-
-# Rails/HasManyOrHasOneDependent:
-#   Enabled: false
-
-# Rails/NotNullColumn:
-#   Enabled: false
-
-# Rails/OutputSafety:
-#   Exclude:
-#     - app/controllers/frontend_controller.rb
-
-# Rails/ReversibleMigration:
-#   Enabled: false
-
-# Rails/UniqueValidationWithoutIndex:
-#   Enabled: false
-
-# Rails/UnknownEnv:
-#   Environments:
-#     - production
-#     - development
-#     - test
-#     - performance
-#     - qa
-#     - staging
-
-# Rails/SkipsModelValidations:
-#   Enabled: false
-
-# Style/ClassAndModuleChildren:
-#   Enabled: false
-
-# Style/Documentation:
-#   Enabled: false
-
-# Style/FrozenStringLiteralComment:
-#   Enabled: true
-
-# Style/GlobalVars:
-#   Enabled: false
-
-# Style/GuardClause:
-#   Enabled: false
-
-# Style/NumericLiterals:
-#   Enabled: false
-
-# Style/OptionalBooleanParameter:
-#   Enabled: false
-
-# Style/RescueStandardError:
-#   Enabled: false

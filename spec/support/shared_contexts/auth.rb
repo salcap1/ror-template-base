@@ -7,7 +7,7 @@ RSpec.shared_context 'with cookie jar' do
   let!(:cookies) { ActionDispatch::Request.new(Rails.application.env_config.deep_dup).cookie_jar }
 
   before do
-    allow_any_instance_of(ApplicationController)
+    allow_any_instance_of(ApplicationController) # rubocop:disable RSpec/AnyInstance
       .to receive(:cookies)
       .and_return(cookies)
   end

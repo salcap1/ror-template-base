@@ -26,8 +26,7 @@ class AuthController < ApplicationController
       access_token, refresh_token = Auth::Issuer.issue!(user)
       issue_tokens(access_token:, refresh_token:)
 
-      data = user.slice(:id, :uuid, :email, :username)
-      return render Responder.created(data:, msg: 'Signin success.')
+      return render Responder.created(data: user_data(user:), msg: 'Signin success.')
     end
 
     render Responder.unprocessable(msg: 'Signin failed.', errors: ['Email address or password is invalid.'])
@@ -43,16 +42,18 @@ class AuthController < ApplicationController
   end
 
   def signup
+    # avatar = params.permit(:avatar)
     email, password, username = params.require(%i[email password username])
 
-    user = User.create(email:, password:, username:)
+    user = User.create(avatar:, email:, password:, username:)
 
     if user.persisted?
+      create_profile(user:, username:, avatar:)
+
       access_token, refresh_token = Auth::Issuer.issue!(user)
       issue_tokens(access_token:, refresh_token:)
 
-      data = user.slice(:id, :uuid, :email, :username)
-      render Responder.created(data:, msg: 'Signup Success.')
+      render Responder.created(data: user_data(user:), msg: 'Signup Success.')
     else
       render Responder.unprocessable(msg: 'User not created.', errors: [user.errors.full_messages.to_sentence])
     end
@@ -63,5 +64,13 @@ class AuthController < ApplicationController
   def issue_tokens(access_token:, refresh_token:)
     cookies.signed[:access_token] = { value: access_token, httponly: true }
     cookies.signed[:refresh_token] = { value: refresh_token, httponly: true, path: '/auth' }
+  end
+
+  def create_profile(user:, username:, avatar:)
+    Profile.create(user:, username:).attach(avatar)
+  end
+
+  def user_data(user:)
+    user.slice(:id, :uuid, :email).merge(user.profile.slice(:username, :avatar))
   end
 end

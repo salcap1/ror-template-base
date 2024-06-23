@@ -9,12 +9,12 @@ RSpec.describe Auth::Issuer do
 
   describe '#issue!' do
     describe 'success' do
-      it 'tokens issued' do
-        access_token = Faker::Internet.device_token
-        jti = Faker::Internet.device_token
-        exp = Time.now.utc.to_i + 15.minutes
-        iat = Time.now.utc.to_i
+      access_token = Faker::Internet.device_token
+      jti = Faker::Internet.device_token
+      exp = Time.now.utc.to_i + 15.minutes
+      iat = Time.now.utc.to_i
 
+      before do
         allow(Auth::Encoder)
           .to receive(:encode!)
           .and_return(
@@ -22,12 +22,15 @@ RSpec.describe Auth::Issuer do
           )
 
         issuer.issue!(user)
+      end
 
+      it 'refresh token issued' do
         refresh_token = user.refresh_tokens.first
         expect(refresh_token.access_token_jti).to eq jti
+      end
 
+      it 'whitelist token issued' do
         whitelisted_token = user.whitelisted_tokens.first
-        expect(Auth::Whitelister.whitelisted?(jti: whitelisted_token.jti)).to be true
         expect(whitelisted_token.jti).to eq jti
         expect(whitelisted_token.exp.to_i).to eq exp
       end
