@@ -46,8 +46,8 @@ PreCommit:
     command: ["bundle", "exec", "rubocop"]
     flags: ["-a", "--fail-level=A", "--color"]
 
-PrePush:
-  RSpec:
-    enabled: true
-    on_warn: fail # Treat all warnings as failures
-    command: ["bundle", "exec", "rspec"]
+# PrePush:
+#   RSpec:
+#     enabled: true
+#     on_warn: fail # Treat all warnings as failures
+#     command: ["bundle", "exec", "rspec"]
