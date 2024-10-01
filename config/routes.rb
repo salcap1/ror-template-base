@@ -13,6 +13,11 @@ Rails.application.routes.draw do
     post '/signup', to: 'auth#signup'
   end
 
+  # Users
+  scope :user do
+    delete '/', to: 'user#delete'
+  end
+
   ### App
   get '/error', to: 'application#error'
   get '/heartbeat', to: 'application#heartbeat'

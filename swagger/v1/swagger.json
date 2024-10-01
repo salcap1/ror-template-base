@@ -246,6 +246,52 @@
           }
         }
       }
+    },
+    "/user": {
+      "delete": {
+        "summary": "delete current user",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "204": {
+            "description": "no content"
+          },
+          "422": {
+            "description": "unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "key": {
+                    "value": {
+                      "message": "Unauthorized",
+                      "errors": [
+                        "A List of Errors"
+                      ],
+                      "context": {
+                        "some": "Error Information"
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_object"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "servers": [

@@ -9,7 +9,7 @@ RSpec.describe AuthController do
       tags 'Authentication'
       produces 'application/json'
 
-      context 'with authenticated user' do
+      context 'with logged in user' do
         include_context 'with authenticated user'
 
         response '200', 'User is Signed In' do
@@ -17,7 +17,9 @@ RSpec.describe AuthController do
         end
       end
 
-      it_behaves_like('unauthenticated request')
+      context 'without logged in user' do
+        it_behaves_like('unauthenticated request')
+      end
     end
   end
 
@@ -26,7 +28,7 @@ RSpec.describe AuthController do
       tags 'Authentication'
       produces 'application/json'
 
-      context 'with authenticated user' do
+      context 'with logged in user' do
         include_context 'with authenticated user'
 
         before do
@@ -44,7 +46,9 @@ RSpec.describe AuthController do
         end
       end
 
-      it_behaves_like('unauthenticated request')
+      context 'without logged in user' do
+        it_behaves_like('unauthenticated request')
+      end
     end
   end
 
@@ -232,7 +236,7 @@ RSpec.describe AuthController do
       produces 'application/json'
 
       response '204', 'User Signed Out' do
-        context 'with authenticated' do
+        context 'with logged in user' do
           include_context 'with authenticated user'
 
           before do
@@ -249,7 +253,9 @@ RSpec.describe AuthController do
         end
       end
 
-      it_behaves_like('unauthenticated request')
+      context 'without logged in user' do
+        it_behaves_like('unauthenticated request')
+      end
     end
   end
 end
