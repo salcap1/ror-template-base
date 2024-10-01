@@ -8,12 +8,9 @@ class AuthController < ApplicationController
   end
 
   def refresh
-    raise Auth::Errors::AuthenticationError, 'User not logged in.' if current_user.blank?
-
     refresh_token = cookies.signed[:refresh_token]
 
-    new_access_token, new_refresh_token = Auth::Refresher.refresh!(refresh_token:, decoded_token:, user: current_user)
-    issue_tokens(access_token: new_access_token, refresh_token: new_refresh_token)
+    refresh_tokens(refresh_token:, decoded_token:, user: current_user)
 
     render Responder.ok(msg: 'Token refreshed.')
   end
@@ -23,11 +20,9 @@ class AuthController < ApplicationController
 
     user = User.find_by(email:)
     if user&.authenticate(password)
-      access_token, refresh_token = Auth::Issuer.issue!(user)
-      issue_tokens(access_token:, refresh_token:)
+      issue_tokens(user:)
 
-      data = user.slice(:id, :uuid, :email, :username)
-      return render Responder.created(data:, msg: 'Signin success.')
+      return render Responder.created(data: user_response(user:), msg: 'Signin success.')
     end
 
     render Responder.unprocessable(msg: 'Signin failed.', errors: ['Email address or password is invalid.'])
@@ -43,25 +38,60 @@ class AuthController < ApplicationController
   end
 
   def signup
-    email, password, username = params.require(%i[email password username])
+    ActiveRecord::Base.transaction do
+      email, password, username = params.require(%i[email password username])
+      avatar = params['avatar']
 
-    user = User.create(email:, password:, username:)
+      if User.find_by(email:).present?
+        render Responder.unprocessable(msg: 'Unable to create User.', errors: ['Email has already been taken.'])
+      else
+        user = User.new(email:, password:)
 
-    if user.persisted?
-      access_token, refresh_token = Auth::Issuer.issue!(user)
-      issue_tokens(access_token:, refresh_token:)
+        if user.save
+          profile = Profile.new(user:, username:)
+          profile.avatar.attach(avatar) if avatar.present?
 
-      data = user.slice(:id, :uuid, :email, :username)
-      render Responder.created(data:, msg: 'Signup Success.')
-    else
-      render Responder.unprocessable(msg: 'User not created.', errors: [user.errors.full_messages.to_sentence])
+          if profile.save
+            issue_tokens(user:)
+
+            render Responder.created(msg: 'Signup Success.', data: user_response(user:))
+          else
+            render Responder.unprocessable(msg: 'Unable to create Profile.',
+                                           errors: [profile.errors.full_messages.to_sentence])
+            raise ActiveRecord::Rollback
+          end
+        else
+          render Responder.unprocessable(msg: 'Unable to create User.', errors: [user.errors.full_messages.to_sentence])
+        end
+      end
     end
   end
 
   private
 
-  def issue_tokens(access_token:, refresh_token:)
+  def params
+    super.permit(:email, :password, :username, :avatar)
+  end
+
+  def issue_tokens(user:)
+    access_token, refresh_token = Auth::Issuer.issue!(user)
     cookies.signed[:access_token] = { value: access_token, httponly: true }
     cookies.signed[:refresh_token] = { value: refresh_token, httponly: true, path: '/auth' }
+  end
+
+  def refresh_tokens(refresh_token:, decoded_token:, user:)
+    new_access_token, new_refresh_token = Auth::Refresher.refresh!(refresh_token:, decoded_token:, user:)
+    cookies.signed[:access_token] = { value: new_access_token, httponly: true }
+    cookies.signed[:refresh_token] = { value: new_refresh_token, httponly: true, path: '/auth' }
+  end
+
+  def user_response(user:)
+    profile = user.profile
+    profile_info = {
+      username: profile.username,
+      avatar: profile.avatar.attached? ? url_for(profile.avatar) : nil
+    }
+
+    user.slice(:id, :uuid, :email).merge(profile_info).compact
   end
 end

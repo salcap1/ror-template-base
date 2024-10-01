@@ -76,6 +76,21 @@ RSpec.describe AuthController do
         end
       end
 
+      response '400', 'Bad Params' do
+        schema '$ref' => '#/components/schemas/error_object'
+        examples
+
+        let(:user) do
+          {
+            password: 'P@ssw0rd!234'
+          }
+        end
+
+        run_test! do |res|
+          expect(response_errors(res)).to eq(['param is missing or the value is empty: email'])
+        end
+      end
+
       response '422', 'Could Not Sign In User' do
         schema '$ref' => '#/components/schemas/error_object'
 
@@ -107,23 +122,41 @@ RSpec.describe AuthController do
         include_context 'with cookie jar'
         include_context 'with issued tokens'
 
-        let(:email) { Faker::Internet.unique.email }
         let(:user) do
           {
-            email:,
+            email: Faker::Internet.unique.email,
             username: Faker::Internet.unique.username,
             password: 'P@ssw0rd!234'
           }
         end
 
         run_test! do
-          expect(User.find_by(email:)).to be_present
+          new_user = User.find_by(email: user[:email])
+
+          expect(new_user).to be_present
+          expect(Profile.find_by(user: new_user)).to be_present
           expect(cookies.signed[:access_token]).to eq(new_access_token)
           expect(cookies.signed[:refresh_token]).to eq(new_refresh_token)
         end
       end
 
-      response '422', 'Could not Create User' do
+      response '400', 'Bad Params' do
+        schema '$ref' => '#/components/schemas/error_object'
+        examples
+
+        let(:user) do
+          {
+            username: Faker::Internet.unique.username,
+            password: 'P@ssw0rd!234'
+          }
+        end
+
+        run_test! do |res|
+          expect(response_errors(res)).to eq(['param is missing or the value is empty: email'])
+        end
+      end
+
+      response '422', 'User exists' do
         schema '$ref' => '#/components/schemas/error_object'
         examples
 
@@ -137,7 +170,57 @@ RSpec.describe AuthController do
         end
 
         run_test! do |res|
-          expect(response_errors(res)).to eq(['Email has already been taken'])
+          expect(response_errors(res)).to eq(['Email has already been taken.'])
+        end
+      end
+
+      response '422', 'Could not create User' do
+        schema '$ref' => '#/components/schemas/error_object'
+        examples
+
+        let(:user_instance) { instance_double(User) }
+        let(:user) do
+          {
+            email: Faker::Internet.unique.email,
+            username: Faker::Internet.unique.username,
+            password: 'P@ssw0rd!234'
+          }
+        end
+
+        before do
+          errors = instance_double(ActiveModel::Errors)
+          allow(user_instance).to receive_messages({ save: false, errors: })
+          allow(errors).to receive(:full_messages).and_return(['Error creating User.'])
+          allow(User).to receive(:new).and_return(user_instance)
+        end
+
+        run_test! do |res|
+          expect(response_errors(res)).to eq(['Error creating User.'])
+        end
+      end
+
+      response '422', 'Could not create Profile' do
+        schema '$ref' => '#/components/schemas/error_object'
+        examples
+
+        let(:profile_instance) { instance_double(Profile, save: false) }
+        let(:user) do
+          {
+            email: Faker::Internet.unique.email,
+            username: Faker::Internet.unique.username,
+            password: 'P@ssw0rd!234'
+          }
+        end
+
+        before do
+          errors = instance_double(ActiveModel::Errors)
+          allow(profile_instance).to receive_messages({ save: false, errors: })
+          allow(errors).to receive(:full_messages).and_return(['Error creating Profile.'])
+          allow(Profile).to receive(:new).and_return(profile_instance)
+        end
+
+        run_test! do |res|
+          expect(response_errors(res)).to eq(['Error creating Profile.'])
         end
       end
     end

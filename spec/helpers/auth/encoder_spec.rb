@@ -10,14 +10,16 @@ RSpec.describe Auth::Encoder do
 
   describe '#decode!' do
     describe 'success' do
-      it 'creates token' do
-        time = Time.now.utc
-        jti = 'e0d1c3f05b64ca3b24382f84f421b022'
+      time = Time.now.utc
+      jti = 'e0d1c3f05b64ca3b24382f84f421b022'
 
+      before do
         allow(JWT).to receive(:encode).and_return(access_token)
-        allow(Time).to receive_message_chain(:now, :utc).and_return(time)
+        allow(Time).to receive_message_chain(:now, :utc).and_return(time) # rubocop:disable RSpec/MessageChain
         allow(SecureRandom).to receive(:hex).and_return(jti)
+      end
 
+      it 'creates token' do
         expect(encoder.encode!(user)).to eq [
           access_token,
           jti,

@@ -97,6 +97,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Params",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_object"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Could Not Sign In User",
             "content": {
@@ -152,8 +162,18 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Params",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_object"
+                }
+              }
+            }
+          },
           "422": {
-            "description": "Could not Create User",
+            "description": "Could not create Profile",
             "content": {
               "application/json": {
                 "schema": {

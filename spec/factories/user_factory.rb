@@ -3,8 +3,11 @@
 FactoryBot.define do
   factory :user, class: 'User' do
     email { Faker::Internet.unique.email }
-    username { Faker::Internet.unique.username }
     password { 'P@ssw0rd!234' }
+
+    after(:build) do |user|
+      create(:profile, user:)
+    end
 
     trait :whitelisted do
       after(:create) do |user|

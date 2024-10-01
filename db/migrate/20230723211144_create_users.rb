@@ -6,12 +6,10 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :uuid, null: false
       t.string :email, null: false
       t.string :password_digest, null: false
-      t.string :username, null: false
 
       t.timestamps null: false
 
-      t.index %i[email], unique: true
-      t.index %i[username], unique: true
+      t.index :email, unique: true
     end
   end
 end

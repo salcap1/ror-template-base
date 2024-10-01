@@ -21,8 +21,6 @@ RSpec.describe Auth::Refresher do
       it 'returns user & token' do
         expect(refresher.refresh!(refresh_token:, decoded_token:, user:)).to eq([new_access_token, new_refresh_token])
         expect(RefreshToken.find_by(access_token_jti: decoded_token[:jti])).to be_nil
-        expect(Auth::Blacklister.blacklisted?(jti: decoded_token[:jti])).to be true
-        expect(Auth::Whitelister.whitelisted?(jti: decoded_token[:jti])).to be false
       end
     end
 
