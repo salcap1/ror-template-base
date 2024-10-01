@@ -40,6 +40,7 @@ group :development do
 end
 
 group :test do
+  gem 'database_cleaner'
   gem 'rspec-rails', '~> 6.0'
   gem 'shoulda-matchers', '~> 5.3'
   gem 'simplecov', '~> 0.21.2'

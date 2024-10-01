@@ -7,5 +7,5 @@ if Rails.env.development?
 
   User.delete_all
 
-  FactoryBot.create(:user, email: 'postman_user@test.com', password: 'P@ssw0rd!234')
+  FactoryBot.create(:user, email: 'postman_user@test.com', password: 'P@ssw0rd!234') if Rails.env.development?
 end

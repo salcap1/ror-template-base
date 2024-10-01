@@ -62,9 +62,7 @@ Metrics/BlockLength:
   Max: 25
 
 Metrics/MethodLength:
-  Exclude:
-    - 'db/migrate/*.rb'
-  Max: 10
+  Enabled: false
 
 Metrics/ClassLength:
   Max: 100
@@ -130,6 +128,9 @@ RSpec/InstanceVariable:
 
 RSpec/LetSetup:
   Enabled: true
+
+RSpec/ScatteredSetup:
+  Enabled: false
 
 RSpec/NestedGroups:
   Max: 3
