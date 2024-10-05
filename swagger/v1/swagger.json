@@ -302,58 +302,109 @@
           "default": "localhost:3001"
         },
         "token": {
-          "defaultToken": {
-            "default": "Bearer xxx"
-          }
+          "default": "Bearer xxx"
         }
       }
     }
   ],
   "components": {
     "schemas": {
-      "error_object": {
+      "SuccessResponse": {
         "type": "object",
         "properties": {
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": "Success"
           },
-          "errors": {
-            "type": "array"
-          },
-          "context": {
-            "type": "object"
+          "data": {
+            "type": "object",
+            "description": "Payload containing data"
           }
         },
         "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "message": {
+            "type": "string",
+            "example": "Error"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Transaction failed"
+            }
+          }
+        },
+        "required": [
+          "status",
           "message",
           "errors"
         ]
+      }
+    },
+    "responses": {
+      "Success": {
+        "description": "Generic success response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SuccessResponse"
+            }
+          }
+        }
       },
-      "user_object": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer"
-              },
-              "uuid": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "id",
-              "uuid",
-              "email",
-              "username"
-            ]
+      "ValidationError": {
+        "description": "Validation or invalid input error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "NotFoundError": {
+        "description": "Resource not found error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "description": "Unauthorized error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
           }
         }
       }
