@@ -4,7 +4,7 @@ class AuthController < ApplicationController
   skip_before_action :authenticate!, only: %i[signin signup]
 
   def check
-    render current_user.present? ? Responder.ok : Responder.unauthorized
+    render_success(data: current_user, message: 'User logged in.')
   end
 
   def refresh
@@ -12,20 +12,18 @@ class AuthController < ApplicationController
 
     refresh_tokens(refresh_token:, decoded_token:, user: current_user)
 
-    render Responder.ok(msg: 'Token refreshed.')
+    render_success(message: 'Token refreshed.')
   end
 
   def signin
     email, password = params.require(%i[email password])
 
     user = User.find_by(email:)
-    if user&.authenticate(password)
-      issue_tokens(user:)
+    return render_error(message: 'Signin failed.') unless user&.authenticate(password)
 
-      return render Responder.created(data: user_response(user:), msg: 'Signin success.')
-    end
+    issue_tokens(user:)
 
-    render Responder.unprocessable(msg: 'Signin failed.', errors: ['Email address or password is invalid.'])
+    render_success(data: user_response(user:), message: 'Signin success.', status: :created)
   end
 
   def signout
@@ -34,16 +32,16 @@ class AuthController < ApplicationController
     cookies.delete(:access_token)
     cookies.delete(:refresh_token, { path: '/auth' })
 
-    render Responder.no_content(msg: 'Signout Success.')
+    render_success(msg: 'Signout Success.', status: :no_content)
   end
 
   def signup
     ActiveRecord::Base.transaction do
       email, password, username = params.require(%i[email password username])
-      avatar = params['avatar']
+      avatar = params[:avatar]
 
       if User.find_by(email:).present?
-        render Responder.unprocessable(msg: 'Unable to create User.', errors: ['Email has already been taken.'])
+        render_error(message: 'Unable to create User.', errors: ['Email has already been taken.'])
       else
         user = User.new(email:, password:)
 
@@ -54,14 +52,13 @@ class AuthController < ApplicationController
           if profile.save
             issue_tokens(user:)
 
-            render Responder.created(msg: 'Signup Success.', data: user_response(user:))
+            render_success(message: 'Signup Success.', data: user_response(user:), status: :created)
           else
-            render Responder.unprocessable(msg: 'Unable to create Profile.',
-                                           errors: [profile.errors.full_messages.to_sentence])
+            render_error(message: 'Unable to create Profile.', errors: [profile.errors.full_messages.to_sentence])
             raise ActiveRecord::Rollback
           end
         else
-          render Responder.unprocessable(msg: 'Unable to create User.', errors: [user.errors.full_messages.to_sentence])
+          render_error(message: 'Unable to create User.', errors: [user.errors.full_messages.to_sentence])
         end
       end
     end

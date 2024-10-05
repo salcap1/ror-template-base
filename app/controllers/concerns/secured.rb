@@ -8,10 +8,6 @@ module Secured
 
     before_action :authenticate!
 
-    rescue_from Auth::Errors::AuthenticationError do |e|
-      render Responder.unauthorized(errors: [e.message])
-    end
-
     private
 
     def authenticate!

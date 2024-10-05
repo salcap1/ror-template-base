@@ -19,7 +19,7 @@ RSpec.describe UserController do
         end
       end
 
-      response(422, 'unprocessable entity') do
+      response '422', 'unprocessable entity' do
         schema '$ref' => '#/components/schemas/error_object'
         examples
 

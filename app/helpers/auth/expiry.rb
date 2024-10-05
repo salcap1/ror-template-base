@@ -5,11 +5,11 @@ module Auth
     module_function
 
     def access_token_span
-      15.minutes
+      15.minutes # TODO: Make ENV_VAR
     end
 
     def refresh_token_span
-      24.hours
+      24.hours # TODO: Make ENV_VAR
     end
 
     def expired?(token:)
