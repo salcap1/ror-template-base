@@ -5,6 +5,10 @@ module RswagHelpers
     JSON.parse(response.body)['data']
   end
 
+  def response_message(response)
+    JSON.parse(response.body)['message']
+  end
+
   def response_errors(response)
     JSON.parse(response.body)['errors']
   end

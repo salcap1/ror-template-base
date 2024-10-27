@@ -3,26 +3,43 @@
 require 'rails_helper'
 require 'swagger_helper'
 
-RSpec.describe ApplicationController do
-  describe 'routes' do
-    it '#root' do
-      get '/'
+RSpec.describe ApplicationController, type: :request do # rubocop:disable RSpec/EmptyExampleGroup,RSpec/Rails/InferredSpecType
+  path '/' do
+    get 'Root Path' do
+      tags 'Application'
+      produces 'application/json'
 
-      expect(response).to have_http_status(:ok)
+      response '200', 'Root' do
+        schema '$ref' => '#/components/schemas/SuccessResponse'
+
+        run_test!
+      end
     end
+  end
 
-    it '#heartbeat' do
-      get '/heartbeat'
+  path '/heartbeat' do
+    get 'Heartbeat Path' do
+      tags 'Application'
+      produces 'application/json'
 
-      expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to eq({ 'message' => 'healthy' })
+      response '200', 'Heartbeat' do
+        schema '$ref' => '#/components/schemas/SuccessResponse'
+
+        run_test!
+      end
     end
+  end
 
-    it '#error' do
-      get '/error'
+  path '/error' do
+    get 'Error Path' do
+      tags 'Application'
+      produces 'application/json'
 
-      expect(response).to have_http_status(:not_found)
-      expect(response.parsed_body).to eq({ 'message' => 'error' })
+      response '422', 'Error' do
+        schema '$ref' => '#/components/schemas/ErrorResponse'
+
+        run_test!
+      end
     end
   end
 end

@@ -2,7 +2,7 @@
 
 class UserController < ApplicationController
   def delete
-    current_user.destroy
+    current_user.destroy!
 
     render_success(status: :no_content)
   end

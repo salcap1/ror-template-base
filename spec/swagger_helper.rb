@@ -9,21 +9,13 @@ RSpec.configure do |config|
     'v1/swagger.json' => {
       openapi: '3.0.1',
       info: {
-        title: 'Your App Name V1',
+        title: 'RoR Base Template',
         version: 'v1'
       },
       paths: {},
       servers: [
         {
-          url: 'http://{defaultHost}',
-          variables: {
-            defaultHost: {
-              default: 'localhost:3001'
-            },
-            token: {
-              default: 'Bearer xxx'
-            }
-          }
+          url: 'http://localhost:3001'
         }
       ],
       components: {
@@ -66,6 +58,21 @@ RSpec.configure do |config|
               }
             },
             required: %w[status message errors]
+          },
+          User: {
+            type: :object,
+            properties: {
+              data: {
+                type: :object,
+                properties: {
+                  id: { type: :integer },
+                  uuid: { type: :string },
+                  email: { type: :string },
+                  username: { type: :string }
+                },
+                required: %w[id uuid email username]
+              }
+            }
           }
         },
         responses: {

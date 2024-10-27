@@ -1,10 +1,70 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Your App Name V1",
+    "title": "RoR Base Template",
     "version": "v1"
   },
   "paths": {
+    "/": {
+      "get": {
+        "summary": "Root Path",
+        "tags": [
+          "Application"
+        ],
+        "responses": {
+          "200": {
+            "description": "Root",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/heartbeat": {
+      "get": {
+        "summary": "Heartbeat Path",
+        "tags": [
+          "Application"
+        ],
+        "responses": {
+          "200": {
+            "description": "Heartbeat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/error": {
+      "get": {
+        "summary": "Error Path",
+        "tags": [
+          "Application"
+        ],
+        "responses": {
+          "422": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/check": {
       "get": {
         "summary": "Check if User is Signed In",
@@ -33,7 +93,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_object"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -69,7 +129,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_object"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -92,7 +152,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/user_object"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -102,17 +162,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error_object"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
           },
           "422": {
-            "description": "Could Not Sign In User",
+            "description": "Signin Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error_object"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -157,7 +217,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/user_object"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -167,7 +227,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error_object"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -177,7 +237,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error_object"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -239,7 +299,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_object"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -257,12 +317,12 @@
           "204": {
             "description": "no content"
           },
-          "422": {
-            "description": "unprocessable entity",
+          "404": {
+            "description": "user not found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error_object"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -285,7 +345,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_object"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -296,15 +356,7 @@
   },
   "servers": [
     {
-      "url": "http://{defaultHost}",
-      "variables": {
-        "defaultHost": {
-          "default": "localhost:3001"
-        },
-        "token": {
-          "default": "Bearer xxx"
-        }
-      }
+      "url": "http://localhost:3001"
     }
   ],
   "components": {
@@ -355,6 +407,34 @@
           "message",
           "errors"
         ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "uuid": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "uuid",
+              "email",
+              "username"
+            ]
+          }
+        }
       }
     },
     "responses": {

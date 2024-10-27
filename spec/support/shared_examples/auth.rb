@@ -5,7 +5,7 @@ require 'swagger_helper'
 
 RSpec.shared_examples 'unauthenticated request' do
   response '401', 'Unauthenticated' do
-    schema '$ref' => '#/components/schemas/error_object'
+    schema '$ref' => '#/components/schemas/ErrorResponse'
     example 'application/json', :key, {
       message: 'Unauthorized',
       errors: ['A List of Errors'],

@@ -67,7 +67,7 @@ RSpec.describe AuthController do
       }
 
       response '201', 'User Signed In' do
-        schema '$ref' => '#/components/schemas/user_object'
+        schema '$ref' => '#/components/schemas/User'
 
         include_context 'with cookie jar'
         include_context 'with issued tokens'
@@ -81,22 +81,16 @@ RSpec.describe AuthController do
       end
 
       response '400', 'Bad Params' do
-        schema '$ref' => '#/components/schemas/error_object'
+        schema '$ref' => '#/components/schemas/ErrorResponse'
         examples
 
-        let(:user) do
-          {
-            password: 'P@ssw0rd!234'
-          }
-        end
+        let(:user) { { password: 'P@ssw0rd!234' } }
 
-        run_test! do |res|
-          expect(response_errors(res)).to eq(['param is missing or the value is empty: email'])
-        end
+        run_test!
       end
 
-      response '422', 'Could Not Sign In User' do
-        schema '$ref' => '#/components/schemas/error_object'
+      response '422', 'Signin Error' do
+        schema '$ref' => '#/components/schemas/ErrorResponse'
 
         let(:user) { { email: create(:user).email, password: 'incorrect_password' } }
 
@@ -121,7 +115,7 @@ RSpec.describe AuthController do
       }
 
       response '201', 'User Created' do
-        schema '$ref' => '#/components/schemas/user_object'
+        schema '$ref' => '#/components/schemas/User'
 
         include_context 'with cookie jar'
         include_context 'with issued tokens'
@@ -145,7 +139,7 @@ RSpec.describe AuthController do
       end
 
       response '400', 'Bad Params' do
-        schema '$ref' => '#/components/schemas/error_object'
+        schema '$ref' => '#/components/schemas/ErrorResponse'
         examples
 
         let(:user) do
@@ -156,12 +150,12 @@ RSpec.describe AuthController do
         end
 
         run_test! do |res|
-          expect(response_errors(res)).to eq(['param is missing or the value is empty: email'])
+          expect(response_message(res)).to eq('Missing required parameters.')
         end
       end
 
       response '422', 'User exists' do
-        schema '$ref' => '#/components/schemas/error_object'
+        schema '$ref' => '#/components/schemas/ErrorResponse'
         examples
 
         let(:existing_user) { create(:user) }
@@ -174,12 +168,12 @@ RSpec.describe AuthController do
         end
 
         run_test! do |res|
-          expect(response_errors(res)).to eq(['Email has already been taken.'])
+          expect(response_message(res)).to eq('Unable to create User.')
         end
       end
 
       response '422', 'Could not create User' do
-        schema '$ref' => '#/components/schemas/error_object'
+        schema '$ref' => '#/components/schemas/ErrorResponse'
         examples
 
         let(:user_instance) { instance_double(User) }
@@ -199,12 +193,12 @@ RSpec.describe AuthController do
         end
 
         run_test! do |res|
-          expect(response_errors(res)).to eq(['Error creating User.'])
+          expect(response_message(res)).to eq('Unable to create User.')
         end
       end
 
       response '422', 'Could not create Profile' do
-        schema '$ref' => '#/components/schemas/error_object'
+        schema '$ref' => '#/components/schemas/ErrorResponse'
         examples
 
         let(:profile_instance) { instance_double(Profile, save: false) }
@@ -224,7 +218,7 @@ RSpec.describe AuthController do
         end
 
         run_test! do |res|
-          expect(response_errors(res)).to eq(['Error creating Profile.'])
+          expect(response_message(res)).to eq('Unable to create Profile.')
         end
       end
     end

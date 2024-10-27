@@ -19,19 +19,19 @@ RSpec.describe UserController do
         end
       end
 
-      response '422', 'unprocessable entity' do
-        schema '$ref' => '#/components/schemas/error_object'
+      response '404', 'user not found' do
+        schema '$ref' => '#/components/schemas/ErrorResponse'
         examples
 
         context 'with logged in user' do
           include_context 'with authenticated user'
 
           before do
-            allow(user).to receive(:destroy).and_raise(StandardError, 'Unable to delete User.')
+            allow(user).to receive(:destroy!).and_raise(ActiveRecord::RecordNotFound)
           end
 
           run_test! do |res|
-            expect(response_errors(res)).to include('Unable to delete User.')
+            expect(response_message(res)).to eq('Record not found.')
           end
         end
       end

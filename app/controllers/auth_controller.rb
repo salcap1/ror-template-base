@@ -19,7 +19,8 @@ class AuthController < ApplicationController
     email, password = params.require(%i[email password])
 
     user = User.find_by(email:)
-    return render_error(message: 'Signin failed.') unless user&.authenticate(password)
+    return render_error(message: 'User does not exist.') if user.nil?
+    return render_error(message: 'Email/Password mismatch.') unless user&.authenticate(password)
 
     issue_tokens(user:)
 
@@ -32,7 +33,7 @@ class AuthController < ApplicationController
     cookies.delete(:access_token)
     cookies.delete(:refresh_token, { path: '/auth' })
 
-    render_success(msg: 'Signout Success.', status: :no_content)
+    render_success(message: 'Signout Success.', status: :no_content)
   end
 
   def signup
